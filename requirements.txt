@@ -16,4 +16,5 @@ tzdata==2025.1
 virtualenv==20.29.2
 dj-database-url
 gunicorn
+whitenoise
 
