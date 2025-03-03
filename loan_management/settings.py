@@ -28,11 +28,16 @@ SECRET_KEY = 'django-insecure-qj@fawg@o&h)ctqs699ib5p0x-j247#(kad-ycfh$3gin9+l7d
 DEBUG = True
 
 import os
+
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    os.getenv("RENDER_EXTERNAL_HOSTNAME"),  # Add this line
+    os.getenv("RENDER_EXTERNAL_HOSTNAME", ""),  # Use an empty string as a fallback
 ]
+
+# If using Render, allow all hosts temporarily for debugging
+if os.getenv("RENDER_EXTERNAL_HOSTNAME"):
+    ALLOWED_HOSTS.append(os.getenv("RENDER_EXTERNAL_HOSTNAME"))
 
 
 # Application definition
@@ -148,7 +153,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',  # Allow public access (for testing)
+    ],
 }
 
 AUTH_USER_MODEL = 'loans.CustomUser'
